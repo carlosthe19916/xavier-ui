@@ -38,7 +38,6 @@ import {
     RHConsultingColor,
     RHTravelAndLodgingColor
 } from '../../../Utilities/constants';
-import { ObjectFetchStatus } from '../../../models/state';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 import {
     ChartAxisProps,
@@ -48,11 +47,14 @@ import {
     ChartBarProps
 } from '@patternfly/react-charts';
 import { FancyChartDonutData } from '../../../PresentationalComponents/FancyChartDonut/FancyChartDonut';
+import { FetchStatus } from '../../../models/state';
+import { AxiosError } from 'axios';
 
 interface StateToProps {
     report: Report;
-    reportInitialSavingEstimation: ReportInitialSavingEstimation;
-    reportInitialSavingEstimationFetchStatus: ObjectFetchStatus;
+    initialSavingsEstimation: ReportInitialSavingEstimation;
+    initialSavingsEstimationFetchStatus: FetchStatus;
+    initialSavingsEstimationFetchError: AxiosError,
 }
 
 interface DispatchToProps {
@@ -83,7 +85,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     };
 
     renderInfo = () => {
-        const { report, reportInitialSavingEstimation } = this.props;
+        const { report, initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         return (
             <ReportCard
@@ -116,7 +118,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     }
 
     renderCostExpenditureComparison = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
         const sourceRampDownCostsModel = reportInitialSavingEstimation.sourceRampDownCostsModel;
         const rhvRampUpCostsModel = reportInitialSavingEstimation.rhvRampUpCostsModel;
 
@@ -189,7 +191,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     };
 
     renderEnvironment = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         return (
             <ReportCard title="Environment">
@@ -199,7 +201,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     }
 
     renderRenewalEstimation = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         return (
             <ReportCard title="VMware ELA renewal estimation">
@@ -209,7 +211,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     }
 
     renderTotalMaintenance = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         const sourceRampDownCostsModel = reportInitialSavingEstimation.sourceRampDownCostsModel;
         const rhvRampUpCostsModel = reportInitialSavingEstimation.rhvRampUpCostsModel;
@@ -285,7 +287,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     }
 
     renderProjectCostBreakdown = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         const sourceRampDownCostsModel = reportInitialSavingEstimation.sourceRampDownCostsModel;
         const rhvRampUpCostsModel = reportInitialSavingEstimation.rhvRampUpCostsModel;
@@ -376,7 +378,7 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     }
 
     renderProjectCostBreakdownTable = () => {
-        const { reportInitialSavingEstimation } = this.props;
+        const { initialSavingsEstimation: reportInitialSavingEstimation } = this.props;
 
         return (
             <ReportCard title="Project cost breakdown">
@@ -495,13 +497,13 @@ class InitialSavingsEstimation extends React.Component<Props, State> {
     };
 
     render() {
-        const { reportInitialSavingEstimationFetchStatus } = this.props;
+        const { initialSavingsEstimationFetchStatus, initialSavingsEstimationFetchError } = this.props;
 
-        if (reportInitialSavingEstimationFetchStatus.error) {
+        if (initialSavingsEstimationFetchError) {
             return this.renderFetchError();
         }
 
-        const isFetchComplete: boolean = reportInitialSavingEstimationFetchStatus.status === 'complete';
+        const isFetchComplete: boolean = initialSavingsEstimationFetchStatus === 'complete';
 
         return (
             <React.Fragment>

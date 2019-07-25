@@ -7,14 +7,18 @@ import  * as dialogDeleteActions from '../../actions/DialogDeleteActions';
 
 const mapStateToProps = (state: GlobalState)  => {
     const {
-        reportState: {
-            reports,
-            reportsFetchStatus
+        reportListState: {
+            total,
+            items,
+            fetchError,
+            fetchStatus
         }
     } = state;
     return {
-        reports,
-        reportsFetchStatus
+        total,
+        items,
+        fetchError,
+        fetchStatus
     };
 };
 

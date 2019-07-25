@@ -1,71 +1,53 @@
-import { Report, ReportWorkloadMigrationSummary, ReportInitialSavingEstimation } from '../Report';
+import {
+    Report,
+    ReportInitialSavingEstimation
+} from '../Report';
 import { User } from '../User';
+import { AxiosError } from 'axios';
 
-/**
- * The fields of this interface should match the /store/index.js
- */
-export interface GlobalState {
-    reportState: ReportState,
-    uploadState: UploadState,
-    userState: UserState,
-    dialogDeleteState: DialogDeleteState
-}
+export type FetchStatus = 'none' | 'inProgress' | 'complete';
 
-export interface ObjectFetchStatus {
-    error: string | null;
-    status: 'none' | 'inProgress' | 'complete';
+export interface CachedReport extends Report {
+    timeRequested: number;
 }
 
 export interface ReportState {
-    report: Report | null;
-    reportFetchStatus: ObjectFetchStatus;
+    byId: Map<string, CachedReport>;
+    fetchStatus: Map<string, FetchStatus>;
+    errors: Map<string, AxiosError>;
+}
 
-    reports: {
-        total: number;
-        items: Report[];
-    };
-    reportsFetchStatus: ObjectFetchStatus;
+export interface ReportListState {
+    total: number;
+    items: Report[];
+    fetchError: AxiosError | null;
+    fetchStatus: FetchStatus;
+}
 
-    reportMigrationSummary: ReportWorkloadMigrationSummary | null;
-    reportMigrationSummaryFetchStatus: ObjectFetchStatus;
+export interface CachedReportInitialSavingEstimation extends ReportInitialSavingEstimation {
+    timeRequested: number;
+}
 
-    reportInitialSavingEstimation: ReportInitialSavingEstimation | null;
-    reportInitialSavingEstimationFetchStatus: ObjectFetchStatus;
+export interface InitialSavingEstimationState {
+    byId: Map<string, CachedReportInitialSavingEstimation>;
+    fetchStatus: Map<string, FetchStatus>;
+    errors: Map<string, AxiosError>;
 }
 
 export interface UploadState {
-    /**
-     * The file that is been uploaded
-     */
-    file: File | null,
-
-    /**
-     * True if the upload finished successfully
-     */
-    success: boolean | null,
-
-    /**
-     * The error message after a failure
-     */
-    error: string | null,
-
-    /**
-     * The current status of the upload
-     */
-    progress: number,
-
-    /**
-     * True if the upload started
-     */
-    uploading: boolean
+    uploadFile: File | null;
+    uploadStatus: FetchStatus;
+    uploadError: AxiosError | null;
+    uploadProgress: number;
 }
 
 export interface UserState {
     user: User | null;
-    userFetchStatus: ObjectFetchStatus;
+    fetchError: AxiosError | null;
+    fetchStatus: FetchStatus;
 }
 
-export type DialogDeleteState = Readonly<{
+export type DialogDeleteState = {
     isOpen: boolean;
     isProcessing: boolean;
     isError: boolean;
@@ -73,4 +55,16 @@ export type DialogDeleteState = Readonly<{
     type: string;
     onDelete: () => void;
     onCancel: () => void;
-}>;
+};
+
+/**
+ * The fields of this interface should match the /store/index.js
+ */
+export interface GlobalState {
+    reportState: ReportState;
+    reportListState: ReportListState;
+    initialSavingEstimationState: InitialSavingEstimationState;
+    uploadState: UploadState;
+    userState: UserState;
+    dialogDeleteState: DialogDeleteState;
+}

@@ -17,7 +17,7 @@ import {
 } from '@patternfly/react-core';
 import { VolumeIcon } from '@patternfly/react-icons';
 import { Link } from 'react-router-dom';
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RouterGlobalProps } from '../../models/router';
@@ -30,6 +30,7 @@ import { Upload, User } from '../../models';
 import './ReportsUpload.scss';
 import UploadForm from './UploadForm';
 import { validateForm } from '../../Utilities/formUtils';
+import { FetchStatus } from '../../models/state';
 
 interface FormValues {
     file: string;
@@ -44,15 +45,14 @@ interface FormValues {
 
 interface StateToProps {
     user: User;
-    file: File;
-    success: boolean | null;
-    error: string | null;
-    progress: number;
-    uploading: boolean
+    uploadFile: File | null;
+    uploadStatus: FetchStatus;
+    uploadError: AxiosError | null;
+    uploadProgress: number;
 }
 
 interface DispatchToProps {
-    uploadProgress: (progress: number) => void;
+    updateProgress: (progress: number) => void;
     uploadRequest: (upload: Upload, config: {}) => void;
     selectUploadFile: (file: File) => void;
     resetUploadFile: () => void;
@@ -153,7 +153,8 @@ class ReportsUpload extends React.Component<Props, State> {
 
     componentDidMount() {
         this.beforeUnloadHandler = window.addEventListener('beforeunload', (event) => {
-            if (this.props.uploading) {
+            const { uploadStatus } = this.props;
+            if (uploadStatus === 'inProgress') {
                 event.preventDefault();
                 return event.returnValue = 'Are you sure you want to close? The upload has not finished yet';
             }
@@ -163,7 +164,8 @@ class ReportsUpload extends React.Component<Props, State> {
     }
 
     componentDidUpdate(_prevProps: Props, prevState: State) {
-        if (this.props.success && prevState.timeoutToRedirect !== 0 && this.state.timeoutToRedirect === 0) {
+        const { uploadStatus, uploadError } = this.props;
+        if (uploadStatus === 'complete' && uploadError === null && prevState.timeoutToRedirect !== 0 && this.state.timeoutToRedirect === 0) {
             this.props.history.push('/reports');
         }
     }
@@ -185,9 +187,9 @@ class ReportsUpload extends React.Component<Props, State> {
      * Called by "Close modal" or by the "Cancel button"
      */
     handleCloseModel = () => {
-        const { uploading, user } = this.props;
+        const { uploadStatus, user } = this.props;
 
-        if (!uploading) {
+        if (!(uploadStatus === 'inProgress')) {
             if (user.firstTimeCreatingReports) {
                 this.props.history.push('/getting-started');
             } else {
@@ -225,7 +227,7 @@ class ReportsUpload extends React.Component<Props, State> {
         });
 
         const upload: Upload = {
-            file: this.props.file,
+            file: this.props.uploadFile,
             reportName: values.reportName,
             reportDescription: values.reportDescription,
             yearOverYearGrowthRatePercentage: values.yearOverYearGrowthRatePercentage,
@@ -241,7 +243,7 @@ class ReportsUpload extends React.Component<Props, State> {
             cancelToken: this.state.cancelUploadSource.token,
             onUploadProgress: (progressEvent: any) => {
                 const progress: number = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                this.props.uploadProgress(progress);
+                this.props.updateProgress(progress);
             }
         };
 
@@ -259,13 +261,16 @@ class ReportsUpload extends React.Component<Props, State> {
     renderProgress() {
         let message: string;
         let secondaryAction;
-        if (this.props.error) {
+
+        const { uploadError, uploadStatus, uploadProgress } = this.props;
+
+        if (uploadError) {
             message = 'An error occured during the upload process. Please, try again.';
             secondaryAction = (
                 <Link to={ '/reports/upload' } className="pf-c-button pf-m-secondary" target="_self">Retry</Link>
             );
         } else {
-            if (this.props.success) {
+            if (uploadStatus === 'complete') {
                 message = 'Finished successfully. We will redirect you to the next page.';
                 secondaryAction = this.actionsOnUploadSuccess();
             } else {
@@ -285,9 +290,9 @@ class ReportsUpload extends React.Component<Props, State> {
                     </Title>
                     <div className="pf-c-empty-state__body">
                         <Progress
-                            value={ this.props.progress }
+                            value={ uploadProgress }
                             measureLocation={ ProgressMeasureLocation.outside }
-                            variant={ this.props.error ? ProgressVariant.danger : ProgressVariant.info }
+                            variant={ uploadError ? ProgressVariant.danger : ProgressVariant.info }
                         />
                     </div>
                     <EmptyStateBody>{ message }</EmptyStateBody>
@@ -300,6 +305,8 @@ class ReportsUpload extends React.Component<Props, State> {
     }
 
     renderForm() {
+        const { uploadFile } = this.props;
+
         return (
             <Formik
                 initialValues={ initialFormValue }
@@ -309,7 +316,7 @@ class ReportsUpload extends React.Component<Props, State> {
                 {
                     props => <UploadForm
                         onFileSelected={ this.onFileSelected }
-                        file={ this.props.file }
+                        file={ uploadFile }
                         handleCancel={ this.handleCloseModel }
                         { ...props } />
                 }
@@ -318,8 +325,8 @@ class ReportsUpload extends React.Component<Props, State> {
     }
 
     render() {
-        const { success, user } = this.props;
-        if (success && user.firstTimeCreatingReports) {
+        const { uploadStatus, uploadError, user } = this.props;
+        if (uploadStatus === 'complete' && !uploadError && user.firstTimeCreatingReports) {
             const { updateUser } = this.props;
             updateUser({ firstTimeCreatingReports: false });
         }

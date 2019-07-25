@@ -10,11 +10,10 @@ import { GenericAction } from '../models/action';
 import { UploadState } from '../models/state';
 
 export const initialState: UploadState = {
-    file: null,
-    success: null,
-    error: null,
-    progress: 0,
-    uploading: false
+    uploadFile: null,
+    uploadStatus: 'none',
+    uploadError: null,
+    uploadProgress: 0
 };
 
 export const uploadsReducer = function (
@@ -22,22 +21,18 @@ export const uploadsReducer = function (
     action: GenericAction
 ) {
     switch (action.type) {
-        case ActionTypes.UPLOAD_PROGRESS: {
+        case ActionTypes.UPDATE_PROGRESS: {
             const nextState: UploadState = {
                 ...state,
-                progress: action.payload.progress
+                uploadProgress: action.payload.progress
             };
             return nextState;
         }
 
         case ActionTypes.SELECT_UPLOAD_FILE: {
             const nextState: UploadState = {
-                ...state,
-                error: null,
-                success: null,
-                progress: 0,
-                uploading: false,
-                file: action.payload.file
+                ...initialState,
+                uploadFile: action.payload.file
             };
             return nextState;
         }
@@ -52,11 +47,7 @@ export const uploadsReducer = function (
         case pendingMessage(ActionTypes.UPLOAD_REQUEST): {
             const nextState: UploadState = {
                 ...state,
-                error: null,
-                success: null,
-                progress: 0,
-                uploading: true,
-                file: action.meta.file
+                uploadStatus: 'inProgress'
             };
             return nextState;
         }
@@ -64,8 +55,8 @@ export const uploadsReducer = function (
         case successMessage(ActionTypes.UPLOAD_REQUEST): {
             const nextState: UploadState = {
                 ...state,
-                success: true,
-                uploading: false
+                uploadError: null,
+                uploadStatus: 'complete'
             };
             return nextState;
         }
@@ -73,9 +64,8 @@ export const uploadsReducer = function (
         case failureMessage(ActionTypes.UPLOAD_REQUEST): {
             const nextState: UploadState = {
                 ...state,
-                error: action.payload.message,
-                success: false,
-                uploading: false
+                uploadError: action.payload,
+                uploadStatus: 'complete'
             };
             return nextState;
         }

@@ -16,12 +16,14 @@ import { Report } from '../../models';
 import { Link } from 'react-router-dom';
 import { RouterGlobalProps } from '../../models/router';
 import { ReportViewPaths } from '../../pages/ReportView/ReportViewConstants';
-import { ObjectFetchStatus } from '../../models/state';
+import { FetchStatus } from '../../models/state';
+import { AxiosError } from 'axios';
 
 export interface Props extends RouterGlobalProps {
     mainStyle?: any;
     report: Report | null;
-    reportFetchStatus: ObjectFetchStatus;
+    reportFetchStatus: FetchStatus | null;
+    reportFetchError: AxiosError | null;
 };
 
 interface State {
@@ -119,13 +121,13 @@ class ReportViewPage extends Component<Props, State> {
     };
 
     render() {
-        const { reportFetchStatus, children } = this.props;
+        const { reportFetchStatus, reportFetchError, children } = this.props;
 
-        if (reportFetchStatus.error) {
+        if (reportFetchError) {
             return <Redirect to={ `/reports` } />;
         }
 
-        const isFetchComplete: boolean = reportFetchStatus.status === 'complete';
+        const isFetchComplete: boolean = reportFetchStatus === 'complete';
 
         return (
             <Fragment>

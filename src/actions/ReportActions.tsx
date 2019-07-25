@@ -42,6 +42,7 @@ export const fetchReport = (id: number): GenericAction => ({
     type: ActionTypes.FETCH_REPORT,
     payload: getReportById(id),
     meta: {
+        reportId: id,
         notifications: {
             rejected: {
                 variant: 'danger',
@@ -72,6 +73,7 @@ export const fetchReportWorkloadMigrationSummary = (id: number): GenericAction =
     type: ActionTypes.FETCH_REPORT_WORKLOAD_MIGRATION_SUMMARY,
     payload: getReportWokloadMigrationSummary(id),
     meta: {
+        reportId: id,
         notifications: {
             rejected: {
                 variant: 'danger',
@@ -85,6 +87,7 @@ export const fetchReportInitialSavingEstimation = (id: number): GenericAction =>
     type: ActionTypes.FETCH_REPORT_INITIAL_SAVING_ESTIMATION,
     payload: getReportInitialSavingestimation(id),
     meta: {
+        reportId: id,
         notifications: {
             rejected: {
                 variant: 'danger',

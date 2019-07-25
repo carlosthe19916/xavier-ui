@@ -6,22 +6,22 @@ import {
     successMessage,
     failureMessage
 } from './reducerHelper';
-import { ReportState } from '../models/state';
+import { InitialSavingEstimationState } from '../models/state';
 import { GenericAction } from '../models/action';
 
-export const initialState: ReportState = {
+export const initialState: InitialSavingEstimationState = {
     byId: new Map(),
-    fetchStatus: new Map(),
+    fetchStatus: new Map,
     errors: new Map()
 };
 
-export const reportsReducer = function (
-    state: ReportState = initialState,
+export const initialSavingEstimationReducer = function (
+    state: InitialSavingEstimationState = initialState,
     action: GenericAction
 ) {
     switch (action.type) {
-        case pendingMessage(ActionTypes.FETCH_REPORT): {
-            const nextState: ReportState = {
+        case pendingMessage(ActionTypes.FETCH_REPORT_INITIAL_SAVING_ESTIMATION): {
+            const nextState: InitialSavingEstimationState = {
                 ...state,
                 fetchStatus: new Map(state.fetchStatus).set(
                     action.meta.reportId,
@@ -32,8 +32,8 @@ export const reportsReducer = function (
             return nextState;
         }
 
-        case successMessage(ActionTypes.FETCH_REPORT): {
-            const nextState: ReportState = {
+        case successMessage(ActionTypes.FETCH_REPORT_INITIAL_SAVING_ESTIMATION): {
+            const nextState: InitialSavingEstimationState = {
                 ...state,
                 fetchStatus: new Map(state.fetchStatus).set(
                     action.meta.reportId,
@@ -48,35 +48,14 @@ export const reportsReducer = function (
             return nextState;
         }
 
-        case failureMessage(ActionTypes.FETCH_REPORT): {
-            const nextState: ReportState = {
+        case failureMessage(ActionTypes.FETCH_REPORT_INITIAL_SAVING_ESTIMATION): {
+            const nextState: InitialSavingEstimationState = {
                 ...state,
                 fetchStatus: new Map(state.fetchStatus).set(
                     action.meta.reportId,
                     'complete'
                 ),
                 errors: new Map(state.errors).set(action.meta.reportId, action.payload)
-            };
-            return nextState;
-        }
-
-        // DELETE_REPORT single report
-        case successMessage(ActionTypes.DELETE_REPORT): {
-            const reportId = action.meta.reportId;
-
-            const fetchStatus = new Map(state.fetchStatus);
-            const errors = new Map(state.errors);
-            const byId = new Map(state.byId);
-
-            fetchStatus.delete(reportId);
-            errors.delete(reportId);
-            byId.delete(reportId);
-
-            const nextState: ReportState = {
-                ...state,
-                fetchStatus,
-                errors,
-                byId
             };
             return nextState;
         }

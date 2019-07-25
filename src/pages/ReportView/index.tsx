@@ -4,14 +4,17 @@ import ReportView from './ReportView';
 import { fetchReport } from '../../actions/ReportActions';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state: GlobalState)  => {
-    const {
-        report,
-        reportFetchStatus
-    } = state.reportState;
+const mapStateToProps = (state: GlobalState, props: any)  => {
+    const reportId = props.match.params.reportId;
+
+    const report = state.reportState.byId.get(reportId) || null;
+    const reportFetchError = state.reportState.errors.get(reportId) || null;
+    const reportFetchStatus = state.reportState.fetchStatus.get(reportId) || null;
+
     return {
         report,
-        reportFetchStatus
+        reportFetchStatus,
+        reportFetchError
     };
 };
 

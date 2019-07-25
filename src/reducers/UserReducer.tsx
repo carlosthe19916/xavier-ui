@@ -11,10 +11,8 @@ import { GenericAction } from '../models/action';
 
 export const initialState: UserState = {
     user: null,
-    userFetchStatus: {
-        error: null,
-        status: 'none'
-    }
+    fetchError: null,
+    fetchStatus: 'none'
 };
 
 export const userReducer = function (
@@ -34,11 +32,7 @@ export const userReducer = function (
         case pendingMessage(ActionTypes.FETCH_USER): {
             const nextState: UserState = {
                 ...state,
-                user: null,
-                userFetchStatus: {
-                    error: null,
-                    status: 'inProgress'
-                }
+                fetchStatus: 'inProgress'
             };
 
             return nextState;
@@ -48,10 +42,8 @@ export const userReducer = function (
             const nextState: UserState = {
                 ...state,
                 user: action.payload.data,
-                userFetchStatus: {
-                    error: null,
-                    status: 'complete'
-                }
+                fetchError: null,
+                fetchStatus: 'complete'
             };
 
             return nextState;
@@ -61,10 +53,8 @@ export const userReducer = function (
             const nextState: UserState = {
                 ...state,
                 user: null,
-                userFetchStatus: {
-                    error: action.payload.message,
-                    status: 'complete'
-                }
+                fetchError: action.payload,
+                fetchStatus: 'complete'
             };
 
             return nextState;

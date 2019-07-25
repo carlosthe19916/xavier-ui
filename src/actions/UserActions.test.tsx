@@ -6,7 +6,7 @@ jest.mock('../api/apiClient', () => ({
 }));
 
 import * as actionGenerator from './UserActions';
-import { Upload, User } from '../models';
+import { User } from '../models';
 
 describe('fetchUser', () => {
     it('returns a state object', () => {

@@ -5,11 +5,13 @@ import { Report } from '../../models';
 import ReportViewPage from '../../PresentationalComponents/ReportViewPage';
 import asyncComponent from '../../Utilities/asyncComponent';
 import { ReportViewPaths } from './ReportViewConstants';
-import { ObjectFetchStatus } from '../../models/state';
+import { FetchStatus } from '../../models/state';
+import { AxiosError } from 'axios';
 
 interface StateToProps {
-    report: Report | null;
-    reportFetchStatus: ObjectFetchStatus;
+    report: Report | null,
+    reportFetchStatus: FetchStatus | null,
+    reportFetchError: AxiosError | null
 }
 
 interface DispatchToProps {
@@ -45,11 +47,13 @@ class ReportView extends React.Component<Props, State> {
     }
 
     render() {
-        const { report, reportFetchStatus } = this.props;
+        const { report, reportFetchStatus, reportFetchError } = this.props;
+
         return (
             <ReportViewPage
                 report={ report }
                 reportFetchStatus={ reportFetchStatus }
+                reportFetchError={ reportFetchError }
             >
                 <Switch>
                     <Route
@@ -58,7 +62,7 @@ class ReportView extends React.Component<Props, State> {
                     />
                     <Route
                         path={ `${this.props.match.url}/${ReportViewPaths.initialSavingsEstimation}` }
-                        component={ InitialSavingsEstimation }
+                        render={ (props: any) => <InitialSavingsEstimation { ...props } report={ report } /> }
                     />
                     <Route
                         path={ `${this.props.match.url}/${ReportViewPaths.workloadInventory}` }

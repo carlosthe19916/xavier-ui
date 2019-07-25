@@ -16,7 +16,7 @@ Object {
 }
 `;
 
-exports[`uploadProgress returns a state object 1`] = `
+exports[`updateProgress returns a state object 1`] = `
 Object {
   "payload": Object {
     "progress": 60,

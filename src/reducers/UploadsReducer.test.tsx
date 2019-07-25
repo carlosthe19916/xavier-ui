@@ -86,7 +86,7 @@ describe('report reducer', () => {
 
         const newState: UploadState = uploadsReducer(
             uploadInitialState,
-            fromRequest(ActionTypes.UPLOAD_PROGRESS, payload)
+            fromRequest(ActionTypes.UPDATE_PROGRESS, payload)
         );
         expect(newState).toEqual(expectedNewState);
     });

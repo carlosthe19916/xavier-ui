@@ -4,7 +4,7 @@ import { Upload } from '../models';
 
 export const ActionTypes = {
     UPLOAD_REQUEST: 'UPLOAD_REQUEST',
-    UPLOAD_PROGRESS: 'UPLOAD_PROGRESS',
+    UPDATE_PROGRESS: 'UPLOAD_PROGRESS',
     SELECT_UPLOAD_FILE: 'SELECT_UPLOAD_FILE',
     RESET_UPLOAD_FILE: 'RESET_UPLOAD_FILE'
 };
@@ -25,8 +25,8 @@ export const uploadRequest = (upload: Upload, config = {}): GenericAction => {
     };
 };
 
-export const uploadProgress = (progress: number): GenericAction => ({
-    type: ActionTypes.UPLOAD_PROGRESS,
+export const updateProgress = (progress: number): GenericAction => ({
+    type: ActionTypes.UPDATE_PROGRESS,
     payload: {
         progress
     }

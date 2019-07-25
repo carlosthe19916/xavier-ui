@@ -43,14 +43,14 @@ import {
 } from '@patternfly/react-icons';
 import debounce from 'lodash/debounce';
 import { Formik } from 'formik';
-import { ObjectFetchStatus } from '../../models/state';
+import { AxiosError } from 'axios';
+import { FetchStatus } from '../../models/state';
 
 interface StateToProps {
-    reports: {
-        total: number;
-        items: Report[];
-    };
-    reportsFetchStatus: ObjectFetchStatus;
+    total: number;
+    items: Report[];
+    fetchError: AxiosError | null;
+    fetchStatus: FetchStatus;
 }
 
 interface DispatchToProps {
@@ -109,9 +109,9 @@ class Reports extends React.Component<Props, State> {
     componentDidUpdate() {
         // If it is the first time fetching reports and there are no reports
         // then redirect to /no-reports page.
-        const { reportsFetchStatus, reports } = this.props;
+        const { fetchStatus, total } = this.props;
         const { isFirstFetchReportsCall } = this.state;
-        if (reports.total === 0 && isFirstFetchReportsCall && reportsFetchStatus.status === 'complete') {
+        if (total === 0 && isFirstFetchReportsCall && fetchStatus === 'complete') {
             this.props.history.push('/no-reports');
         }
     }
@@ -181,7 +181,8 @@ class Reports extends React.Component<Props, State> {
     };
 
     filtersInRowsAndCells(): void {
-        const reports: Report[] = this.props.reports.items ? Object.values(this.props.reports.items) : [];
+        const { items } = this.props;
+        const reports: Report[] = items ? Object.values(items) : [];
 
         let rows: any[][] = [];
         if (reports.length > 0) {
@@ -238,7 +239,7 @@ class Reports extends React.Component<Props, State> {
 
     onPerPageSelect = (_event: any, perPage: number) => {
         let page = this.state.page;
-        const total = this.props.reports.total;
+        const { total } = this.props;
 
         // If current page and perPage would request data beyond total, show last available page
         if (page * perPage > total) {
@@ -329,7 +330,7 @@ class Reports extends React.Component<Props, State> {
 
     render() {
         const { isFirstFetchReportsCall, page, perPage } = this.state;
-        const { total } = this.props.reports;
+        const { total } = this.props;
 
         if (isFirstFetchReportsCall) {
             return (

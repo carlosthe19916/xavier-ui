@@ -1,11 +1,13 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { User } from '../../models';
-import { ObjectFetchStatus } from '../../models/state';
+import { FetchStatus } from '../../models/state';
+import { AxiosError } from 'axios';
 
 interface StateToProps {
     user: User | null;
-    userFetchStatus: ObjectFetchStatus;
+    fetchStatus: FetchStatus;
+    fetchError: AxiosError;
 }
 
 interface DispatchToProps {
@@ -29,9 +31,9 @@ class UserRoute extends React.Component<Props, State> {
     }
 
     render() {
-        const { user, userFetchStatus, component: Component, ...rest } = this.props;
+        const { user, fetchStatus, component: Component, ...rest } = this.props;
 
-        switch (userFetchStatus.status) {
+        switch (fetchStatus) {
             case 'complete':
                 if (user) {
                     return <Route { ...rest } component={ Component } />;

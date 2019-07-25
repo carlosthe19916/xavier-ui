@@ -7,12 +7,14 @@ const mapStateToProps = (state: GlobalState) => {
     const {
         userState: {
             user,
-            userFetchStatus
+            fetchStatus,
+            fetchError
         }
     } = state;
     return {
         user,
-        userFetchStatus
+        fetchStatus,
+        fetchError
     };
 };
 

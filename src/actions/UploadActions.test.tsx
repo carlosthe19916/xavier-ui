@@ -24,9 +24,9 @@ describe('uploadRequest', () => {
     });
 });
 
-describe('uploadProgress', () => {
+describe('updateProgress', () => {
     it('returns a state object', () => {
-        expect(actionGenerator.uploadProgress(60)).toMatchSnapshot();
+        expect(actionGenerator.updateProgress(60)).toMatchSnapshot();
     });
 });
 

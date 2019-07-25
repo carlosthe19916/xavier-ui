@@ -8,11 +8,10 @@ import { GlobalState } from '../../models/state';
 const mapStateToProps = (state: GlobalState)  => {
     const {
         uploadState: {
-            file,
-            success,
-            error,
-            progress,
-            uploading
+            uploadFile,
+            uploadStatus,
+            uploadError,
+            uploadProgress
         },
         userState: {
             user
@@ -20,17 +19,16 @@ const mapStateToProps = (state: GlobalState)  => {
     } = state;
     return {
         user,
-        file,
-        success,
-        error,
-        progress,
-        uploading
+        uploadFile,
+        uploadStatus,
+        uploadError,
+        uploadProgress
     };
 };
 
 const mapDispatchToProps = {
     uploadRequest: uploadActions.uploadRequest,
-    uploadProgress: uploadActions.uploadProgress,
+    updateProgress: uploadActions.updateProgress,
     selectUploadFile: uploadActions.selectUploadFile,
     resetUploadFile: uploadActions.resetUploadFile,
     updateUser: userActions.updateUser
