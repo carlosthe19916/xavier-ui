@@ -28,6 +28,19 @@ export function getAllReports(page: number, perPage: number, filterText: string)
 }
 
 export function getReportById(id: number): AxiosPromise<Report> {
+    ApiClient.get(`/report/${id}/payload`).then((response) => {
+        console.log("***************************************");
+        console.log("***************************************");
+        console.log("SUCCESSS response:", response);
+        console.log("***************************************");
+        console.log("***************************************");
+    }).catch((error) => {
+        console.log("***************************************");
+        console.log("***************************************");
+        console.log("ERROR response:", error);
+        console.log("***************************************");
+        console.log("***************************************");
+    });
     return ApiClient.get<Report>(`/report/${id}`);
 }
 
