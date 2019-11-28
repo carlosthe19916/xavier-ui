@@ -43,7 +43,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
-    "@redhat-cloud-services/frontend-components-config": "0.0.9",
+    "@redhat-cloud-services/frontend-components-config": "0.0.13",
     "@types/enzyme": "^3.9.3",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
