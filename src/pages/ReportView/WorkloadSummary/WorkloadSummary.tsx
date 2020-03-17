@@ -15,7 +15,9 @@ import {
     Button,
     TitleLevel,
     Stack,
-    StackItem
+    StackItem,
+    Card,
+    CardBody
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 import ReportCard from '../../../PresentationalComponents/ReportCard';
@@ -286,6 +288,70 @@ class WorkloadMigrationSummary extends React.Component<Props, State> {
         );
     };
 
+    public renderJavaRuntimesInformation = () => {
+        const chartProps = {
+            title: formatNumber(500, 0),
+            subTitle: 'Total',
+            height: 300,
+            width: 300
+        };
+        const chartLegendProps = {
+            height: 300,
+            width: 210,
+            responsive: false,
+            y: 60
+            
+        };
+        const chartData: FancyChartDonutData[] = [{
+            label: 'Oracle 6',
+            value: 0.3,
+            data: 31
+        }, {
+            label: 'Oracle 7',
+            value: 0.6,
+            data: 62
+        }, {
+            label: 'Oracle 8',
+            value: 0.1,
+            data: 11
+        }];
+
+        const tickFormat = (label: string, value: number) => `${label}: ${formatPercentage(value, 2)}`;
+        const tooltipFormat = (datum: any, active: boolean) => `${datum.x}: ${formatPercentage(datum.y, 2)} \n Total: ${formatNumber(datum.data, 0)}`;
+
+        return (
+            <ReportCard
+                title='Java Runtimes information and recommendations'
+            >
+                <div className="pf-l-grid pf-m-all-12-col-on-md pf-m-all-6-col-on-lg pf-m-gutter">
+                    <div>
+                        <FancyChartDonut
+                            data={ chartData }
+                            chartProps={ chartProps }
+                            chartLegendProps={ chartLegendProps }
+                            tickFormat={ tickFormat }
+                            tooltipFormat={ tooltipFormat }
+                        />
+                    </div>
+                    <div>
+                        <Bullseye>
+                            <Card className="xa-c-card-solid">
+                                <CardBody>
+                                    <h2 className="pf-c-title pf-m-3xl">
+                                        { formatNumber(110, 0) } Open JDK
+                                    </h2>
+                                    <h3 className="pf-c-title pf-m-1xl">
+                                        Oracle JDKs that can be replaced with OpenJDK
+                                    </h3>
+                                </CardBody>
+                            </Card>
+                        </Bullseye>
+                    </div>
+                </div>
+            </ReportCard>
+        );
+    };
+
     public renderScansRun = () => {
         const { reportWorkloadSummary } = this.props;
 
@@ -323,6 +389,9 @@ class WorkloadMigrationSummary extends React.Component<Props, State> {
                     </StackItem>
                     <StackItem isFilled={ false }>
                         { this.renderWorkloadsDetected() }
+                    </StackItem>
+                    <StackItem isFilled={ false }>
+                        { this.renderJavaRuntimesInformation() }
                     </StackItem>
                     <StackItem isFilled={ false }>
                         { this.renderFlagsTable() }
