@@ -9,7 +9,7 @@
     "@patternfly/react-core": "^4.22.2",
     "@patternfly/react-table": "^4.8.3",
     "@redhat-cloud-services/frontend-components": "^2.1.2",
-    "@redhat-cloud-services/frontend-components-notifications": "^2.1.1",
+    "@redhat-cloud-services/frontend-components-notifications": "^2.2.2",
     "@redhat-cloud-services/frontend-components-utilities": "^2.1.0",
     "@types/jest": "^24.0.13",
     "@types/lodash": "^4.14.130",
