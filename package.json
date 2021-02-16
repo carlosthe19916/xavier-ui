@@ -6,7 +6,7 @@
     "@babel/runtime": "^7.1.2",
     "@patternfly/patternfly": "^4.10.31",
     "@patternfly/react-charts": "^6.5.1",
-    "@patternfly/react-core": "^4.22.2",
+    "@patternfly/react-core": "^4.97.0",
     "@patternfly/react-table": "^4.8.3",
     "@redhat-cloud-services/frontend-components": "^2.1.2",
     "@redhat-cloud-services/frontend-components-notifications": "^2.1.1",
