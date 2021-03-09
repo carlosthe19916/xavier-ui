@@ -4,7 +4,7 @@
   "private": false,
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "@patternfly/patternfly": "^4.10.31",
+    "@patternfly/patternfly": "^4.90.5",
     "@patternfly/react-charts": "^6.5.1",
     "@patternfly/react-core": "^4.22.2",
     "@patternfly/react-table": "^4.8.3",
